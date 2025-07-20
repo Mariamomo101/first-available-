@@ -35,6 +35,16 @@
         <servlet-name>DashboardServlet</servlet-name>
         <servlet-class>servlets.DashboardServlet</servlet-class>
     </servlet>
+    
+    <servlet>
+        <servlet-name>StudentRegistrationServlet</servlet-name>
+        <servlet-class>servlets.StudentRegistrationServlet</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>OrganizerRequestServlet</servlet-name>
+        <servlet-class>servlets.OrganizerRequestServlet</servlet-class>
+    </servlet>
 
     <!-- Servlet Mappings -->
     <servlet-mapping>
@@ -55,6 +65,16 @@
     <servlet-mapping>
         <servlet-name>DashboardServlet</servlet-name>
         <url-pattern>/dashboard</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>StudentRegistrationServlet</servlet-name>
+        <url-pattern>/StudentRegistrationServlet</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>OrganizerRequestServlet</servlet-name>
+        <url-pattern>/OrganizerRequestServlet</url-pattern>
     </servlet-mapping>
 
     <!-- Session Configuration -->

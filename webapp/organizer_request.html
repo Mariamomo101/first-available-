@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Organizer Request - SkillSync</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <h1>SkillSync</h1>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="student_registration.html">Student Registration</a></li>
+                <li><a href="organizer_request.html">Organizer Request</a></li>
+                <li><a href="login">Login</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="form-container">
+            <section class="registration-form">
+                <h2>Organizer Request</h2>
+                <p class="form-description">Apply to become an event organizer and create amazing opportunities for students!</p>
+                
+                <form action="OrganizerRequestServlet" method="post" id="organizerForm">
+                    
+                    <!-- Personal Information Section -->
+                    <fieldset>
+                        <legend>Personal Information</legend>
+                        
+                        <div class="form-group">
+                            <label for="name">Full Name <span class="required">*</span></label>
+                            <input type="text" id="name" name="name" required 
+                                   placeholder="Enter your full name" 
+                                   minlength="2" maxlength="100">
+                            <div class="error-message" id="nameError"></div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Email Address <span class="required">*</span></label>
+                            <input type="email" id="email" name="email" required 
+                                   placeholder="your.email@organization.com">
+                            <div class="error-message" id="emailError"></div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="department">Department/Field <span class="required">*</span></label>
+                                <input type="text" id="department" name="department" required 
+                                       placeholder="e.g., Engineering, Business, HR" 
+                                       maxlength="100">
+                                <div class="error-message" id="departmentError"></div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="preferredSemester">Preferred Target Semester</label>
+                                <select id="preferredSemester" name="preferredSemester">
+                                    <option value="">Any Semester</option>
+                                    <option value="1-2">1st - 2nd Semester (Beginners)</option>
+                                    <option value="3-4">3rd - 4th Semester (Intermediate)</option>
+                                    <option value="5-6">5th - 6th Semester (Advanced)</option>
+                                    <option value="7-8">7th - 8th Semester (Final Year)</option>
+                                    <option value="9-10">Graduate Students</option>
+                                    <option value="all">All Semesters</option>
+                                </select>
+                                <div class="error-message" id="preferredSemesterError"></div>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <!-- Organization Information Section -->
+                    <fieldset>
+                        <legend>Organization Information</legend>
+                        
+                        <div class="form-group">
+                            <label for="organizationName">Organization Name <span class="required">*</span></label>
+                            <input type="text" id="organizationName" name="organizationName" required 
+                                   placeholder="e.g., TechCorp Solutions, University Innovation Lab" 
+                                   maxlength="150">
+                            <small class="help-text">Company, institution, or organization you represent</small>
+                            <div class="error-message" id="organizationNameError"></div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="organizationType">Organization Type</label>
+                            <select id="organizationType" name="organizationType">
+                                <option value="">Select Type</option>
+                                <option value="corporate">Corporate/Company</option>
+                                <option value="startup">Startup</option>
+                                <option value="nonprofit">Non-Profit Organization</option>
+                                <option value="academic">Academic Institution</option>
+                                <option value="government">Government Agency</option>
+                                <option value="freelance">Individual/Freelancer</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                    </fieldset>
+
+                    <!-- Event Requirements Section -->
+                    <fieldset>
+                        <legend>Event Requirements</legend>
+                        
+                        <div class="form-group">
+                            <label for="requiredSkills">Required Skills for Events <span class="required">*</span></label>
+                            <textarea id="requiredSkills" name="requiredSkills" rows="4" required 
+                                      placeholder="Enter the skills you're looking for in participants, separated by commas (e.g., Java Programming, Team Work, Communication, Problem Solving, Leadership)"
+                                      maxlength="500"></textarea>
+                            <small class="help-text">List the skills you want students to have or develop through your events</small>
+                            <div class="error-message" id="requiredSkillsError"></div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="eventTypes">Types of Events You Plan to Organize</label>
+                            <div class="checkbox-group">
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="workshops" name="eventTypes" value="Workshops">
+                                    <label for="workshops">Workshops & Training</label>
+                                </div>
+                                
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="hackathons" name="eventTypes" value="Hackathons">
+                                    <label for="hackathons">Hackathons</label>
+                                </div>
+                                
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="seminars" name="eventTypes" value="Seminars">
+                                    <label for="seminars">Seminars & Webinars</label>
+                                </div>
+                                
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="competitions" name="eventTypes" value="Competitions">
+                                    <label for="competitions">Competitions</label>
+                                </div>
+                                
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="internships" name="eventTypes" value="Internships">
+                                    <label for="internships">Internship Programs</label>
+                                </div>
+                                
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="networking" name="eventTypes" value="Networking">
+                                    <label for="networking">Networking Events</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="eventDescription">Brief Description of Planned Events</label>
+                            <textarea id="eventDescription" name="eventDescription" rows="3" 
+                                      placeholder="Describe the types of events you plan to organize and their objectives..."
+                                      maxlength="1000"></textarea>
+                            <small class="help-text">Optional: Give us more details about your event plans</small>
+                        </div>
+                    </fieldset>
+
+                    <!-- Additional Information Section -->
+                    <fieldset>
+                        <legend>Additional Information</legend>
+                        
+                        <div class="form-group">
+                            <label for="experience">Relevant Experience</label>
+                            <textarea id="experience" name="experience" rows="3" 
+                                      placeholder="Describe your experience in organizing events, training, or working with students..."
+                                      maxlength="500"></textarea>
+                            <small class="help-text">Optional: Any relevant experience that supports your application</small>
+                        </div>
+                        
+                        <div class="form-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="termsAgreement" name="termsAgreement" value="agreed" required>
+                                <label for="termsAgreement">
+                                    I agree to the <a href="#" target="_blank">Terms and Conditions</a> and 
+                                    <a href="#" target="_blank">Organizer Guidelines</a> <span class="required">*</span>
+                                </label>
+                            </div>
+                            <div class="error-message" id="termsError"></div>
+                        </div>
+                    </fieldset>
+
+                    <!-- Form Actions -->
+                    <div class="form-actions">
+                        <button type="reset" class="btn btn-secondary">Clear Form</button>
+                        <button type="submit" class="btn btn-primary">Submit Organizer Request</button>
+                    </div>
+                </form>
+                
+                <div class="form-footer">
+                    <p>Want to participate in events instead? <a href="student_registration.html">Register as Student</a></p>
+                    <p>Have questions? <a href="mailto:support@skillsync.com">Contact Support</a></p>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 SkillSync. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Enhanced form validation
+        document.getElementById('organizerForm').addEventListener('submit', function(e) {
+            const requiredSkills = document.getElementById('requiredSkills').value.trim();
+            const termsAgreed = document.getElementById('termsAgreement').checked;
+            
+            // Validate required skills field
+            if (requiredSkills.length === 0) {
+                e.preventDefault();
+                document.getElementById('requiredSkillsError').textContent = 'Please enter at least one required skill.';
+                document.getElementById('requiredSkills').focus();
+                return;
+            }
+            
+            // Validate terms agreement
+            if (!termsAgreed) {
+                e.preventDefault();
+                document.getElementById('termsError').textContent = 'You must agree to the terms and conditions.';
+                document.getElementById('termsAgreement').focus();
+                return;
+            }
+            
+            // Clear any previous error messages
+            document.querySelectorAll('.error-message').forEach(error => error.textContent = '');
+        });
+
+        // Real-time validation for organization name
+        document.getElementById('organizationName').addEventListener('blur', function() {
+            const orgName = this.value.trim();
+            const errorDiv = document.getElementById('organizationNameError');
+            
+            if (orgName.length > 0 && orgName.length < 2) {
+                errorDiv.textContent = 'Organization name must be at least 2 characters long.';
+            } else {
+                errorDiv.textContent = '';
+            }
+        });
+
+        // Skills field character count
+        document.getElementById('requiredSkills').addEventListener('input', function() {
+            const maxLength = this.getAttribute('maxlength');
+            const currentLength = this.value.length;
+            
+            // You could add a character counter here if needed
+            if (currentLength > maxLength * 0.9) {
+                // Warning when approaching limit
+                this.style.borderColor = '#f39c12';
+            } else {
+                this.style.borderColor = '';
+            }
+        });
+    </script>
+</body>
+</html>

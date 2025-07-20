@@ -14,68 +14,168 @@
             </div>
             <ul class="nav-links">
                 <li><a href="index.html">Home</a></li>
-                <li><a href="student_registration.html">Register</a></li>
+                <li><a href="student_registration.html">Student Registration</a></li>
+                <li><a href="organizer_request.html">Organizer Request</a></li>
                 <li><a href="login">Login</a></li>
-                <li><a href="organizer_dashboard.html">Dashboard</a></li>
             </ul>
         </nav>
     </header>
 
     <main>
-        <section class="registration-form">
-            <h2>Student Registration</h2>
-            <form action="register" method="post">
-                <div class="form-group">
-                    <label for="firstName">First Name:</label>
-                    <input type="text" id="firstName" name="firstName" required>
+        <div class="form-container">
+            <section class="registration-form">
+                <h2>Student Registration</h2>
+                <p class="form-description">Join SkillSync to discover amazing skill development opportunities!</p>
+                
+                <form action="StudentRegistrationServlet" method="post" id="studentForm">
+                    
+                    <!-- Personal Information Section -->
+                    <fieldset>
+                        <legend>Personal Information</legend>
+                        
+                        <div class="form-group">
+                            <label for="name">Full Name <span class="required">*</span></label>
+                            <input type="text" id="name" name="name" required 
+                                   placeholder="Enter your full name" 
+                                   minlength="2" maxlength="100">
+                            <div class="error-message" id="nameError"></div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Email Address <span class="required">*</span></label>
+                            <input type="email" id="email" name="email" required 
+                                   placeholder="your.email@university.edu">
+                            <div class="error-message" id="emailError"></div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="department">Department <span class="required">*</span></label>
+                                <input type="text" id="department" name="department" required 
+                                       placeholder="e.g., Computer Science" 
+                                       maxlength="100">
+                                <div class="error-message" id="departmentError"></div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="semester">Current Semester <span class="required">*</span></label>
+                                <select id="semester" name="semester" required>
+                                    <option value="">Select Semester</option>
+                                    <option value="1">1st Semester</option>
+                                    <option value="2">2nd Semester</option>
+                                    <option value="3">3rd Semester</option>
+                                    <option value="4">4th Semester</option>
+                                    <option value="5">5th Semester</option>
+                                    <option value="6">6th Semester</option>
+                                    <option value="7">7th Semester</option>
+                                    <option value="8">8th Semester</option>
+                                    <option value="9">9th Semester (Master's)</option>
+                                    <option value="10">10th Semester (Master's)</option>
+                                </select>
+                                <div class="error-message" id="semesterError"></div>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <!-- Academic Information Section -->
+                    <fieldset>
+                        <legend>Academic Information</legend>
+                        
+                        <div class="form-group">
+                            <label for="cvLink">CV/Resume Link</label>
+                            <input type="url" id="cvLink" name="cvLink" 
+                                   placeholder="https://your-portfolio.com/cv or https://linkedin.com/in/yourname">
+                            <small class="help-text">Optional: Link to your CV, portfolio, or LinkedIn profile</small>
+                            <div class="error-message" id="cvLinkError"></div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="skills">Skills <span class="required">*</span></label>
+                            <textarea id="skills" name="skills" rows="4" required 
+                                      placeholder="Enter your skills separated by commas (e.g., Java Programming, Web Development, Database Design, Problem Solving)"
+                                      maxlength="500"></textarea>
+                            <small class="help-text">List your technical and soft skills, separated by commas</small>
+                            <div class="error-message" id="skillsError"></div>
+                        </div>
+                    </fieldset>
+
+                    <!-- Interest Areas Section -->
+                    <fieldset>
+                        <legend>Interest Areas</legend>
+                        <p class="section-description">Select the areas you're interested in exploring:</p>
+                        
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="publicSpeaking" name="interestAreas" value="Public Speaking">
+                                <label for="publicSpeaking">Public Speaking</label>
+                            </div>
+                            
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="programming" name="interestAreas" value="Programming">
+                                <label for="programming">Programming</label>
+                            </div>
+                            
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="design" name="interestAreas" value="Design">
+                                <label for="design">Design</label>
+                            </div>
+                            
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="hosting" name="interestAreas" value="Hosting">
+                                <label for="hosting">Event Hosting</label>
+                            </div>
+                        </div>
+                        <div class="error-message" id="interestAreasError"></div>
+                    </fieldset>
+
+                    <!-- Form Actions -->
+                    <div class="form-actions">
+                        <button type="reset" class="btn btn-secondary">Clear Form</button>
+                        <button type="submit" class="btn btn-primary">Register as Student</button>
+                    </div>
+                </form>
+                
+                <div class="form-footer">
+                    <p>Already have an account? <a href="login">Login here</a></p>
+                    <p>Want to organize events? <a href="organizer_request.html">Register as Organizer</a></p>
                 </div>
-                
-                <div class="form-group">
-                    <label for="lastName">Last Name:</label>
-                    <input type="text" id="lastName" name="lastName" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="email">Email:</label>
-                    <input type="email" id="email" name="email" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="password">Password:</label>
-                    <input type="password" id="password" name="password" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="confirmPassword">Confirm Password:</label>
-                    <input type="password" id="confirmPassword" name="confirmPassword" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="university">University:</label>
-                    <input type="text" id="university" name="university" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="major">Major:</label>
-                    <input type="text" id="major" name="major" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="skills">Skills (comma-separated):</label>
-                    <textarea id="skills" name="skills" rows="3"></textarea>
-                </div>
-                
-                <input type="hidden" name="userType" value="student">
-                
-                <button type="submit" class="btn btn-primary">Register</button>
-            </form>
-            
-            <p>Already have an account? <a href="login">Login here</a></p>
-        </section>
+            </section>
+        </div>
     </main>
 
     <footer>
         <p>&copy; 2024 SkillSync. All rights reserved.</p>
     </footer>
+
+    <script>
+        // Basic form validation enhancement
+        document.getElementById('studentForm').addEventListener('submit', function(e) {
+            const skills = document.getElementById('skills').value.trim();
+            const interestAreas = document.querySelectorAll('input[name="interestAreas"]:checked');
+            
+            // Validate skills field
+            if (skills.length === 0) {
+                e.preventDefault();
+                document.getElementById('skillsError').textContent = 'Please enter at least one skill.';
+                document.getElementById('skills').focus();
+                return;
+            }
+            
+            // Clear any previous error messages
+            document.querySelectorAll('.error-message').forEach(error => error.textContent = '');
+        });
+
+        // Real-time validation for URL field
+        document.getElementById('cvLink').addEventListener('blur', function() {
+            const url = this.value.trim();
+            const errorDiv = document.getElementById('cvLinkError');
+            
+            if (url && !url.match(/^https?:\/\/.+/)) {
+                errorDiv.textContent = 'Please enter a valid URL starting with http:// or https://';
+            } else {
+                errorDiv.textContent = '';
+            }
+        });
+    </script>
 </body>
 </html>
