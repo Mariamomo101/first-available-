@@ -77,7 +77,7 @@ public class StudentFilterServlet extends HttpServlet {
             List<Student> filteredStudents = filterStudents(allStudents, skillFilter, departmentFilter, semesterFilter);
             
             // Generate and send HTML response
-            generateFilteredResultsHTML(response, filteredStudents, skillFilter, departmentFilter, semesterFilter);
+            generateFilteredResultsHTML(request, response, filteredStudents, skillFilter, departmentFilter, semesterFilter);
             
         } catch (Exception e) {
             sendErrorResponse(response, "Error filtering students: " + e.getMessage());
@@ -262,7 +262,7 @@ public class StudentFilterServlet extends HttpServlet {
     /**
      * Generates HTML response with filtered results
      */
-    private void generateFilteredResultsHTML(HttpServletResponse response, List<Student> filteredStudents, 
+    private void generateFilteredResultsHTML(HttpServletRequest request, HttpServletResponse response, List<Student> filteredStudents, 
                                            String skillFilter, String departmentFilter, String semesterFilter) 
             throws IOException {
         
@@ -355,6 +355,7 @@ public class StudentFilterServlet extends HttpServlet {
             out.println("                        <th>🛠️ Skills</th>");
             out.println("                        <th>📄 CV</th>");
             out.println("                        <th>🎯 Interests</th>");
+            out.println("                        <th>⚡ Actions</th>");
             out.println("                    </tr>");
             out.println("                </thead>");
             out.println("                <tbody>");
@@ -397,6 +398,28 @@ public class StudentFilterServlet extends HttpServlet {
                 }
                 out.println("                        </td>");
                 
+                // Actions column
+                out.println("                        <td>");
+                boolean isShortlisted = utils.DatabaseMock.isStudentShortlisted(student.getEmail());
+                if (isShortlisted) {
+                    // Student is already shortlisted - show different button
+                    out.println("                            <form method='post' action='/skillsync/invite-student' style='display: inline;'>");
+                    out.println("                                <input type='hidden' name='studentEmail' value='" + escapeHtml(student.getEmail()) + "'>");
+                    out.println("                                <input type='hidden' name='action' value='remove'>");
+                    out.println("                                <input type='hidden' name='redirectUrl' value='" + request.getRequestURL() + "?" + (request.getQueryString() != null ? request.getQueryString() : "") + "'>");
+                    out.println("                                <button type='submit' class='btn btn-warning' title='Remove from shortlist' style='background: #ffc107; color: #212529; border: none; padding: 6px 12px; border-radius: 4px; font-size: 0.85em;'>✅ Shortlisted</button>");
+                    out.println("                            </form>");
+                } else {
+                    // Student is not shortlisted - show shortlist button
+                    out.println("                            <form method='post' action='/skillsync/invite-student' style='display: inline;'>");
+                    out.println("                                <input type='hidden' name='studentEmail' value='" + escapeHtml(student.getEmail()) + "'>");
+                    out.println("                                <input type='hidden' name='action' value='shortlist'>");
+                    out.println("                                <input type='hidden' name='redirectUrl' value='" + request.getRequestURL() + "?" + (request.getQueryString() != null ? request.getQueryString() : "") + "'>");
+                    out.println("                                <button type='submit' class='btn btn-primary' title='Add to shortlist' style='background: #667eea; color: white; border: none; padding: 6px 12px; border-radius: 4px; font-size: 0.85em;'>📋 Shortlist</button>");
+                    out.println("                            </form>");
+                }
+                out.println("                        </td>");
+                
                 out.println("                    </tr>");
             }
             
@@ -408,6 +431,7 @@ public class StudentFilterServlet extends HttpServlet {
         // Footer navigation
         out.println("        <div style='margin-top: 30px; text-align: center; padding-top: 20px; border-top: 1px solid #ddd;'>");
         out.println("            <a href='/skillsync/filter-students' style='margin-right: 15px; text-decoration: none; color: #667eea;'>🔄 New Search</a>");
+        out.println("            <a href='/skillsync/shortlisted-students' style='margin-right: 15px; text-decoration: none; color: #667eea;'>👥 Shortlisted (" + utils.DatabaseMock.getShortlistedStudentCount() + ")</a>");
         out.println("            <a href='/skillsync/admin-dashboard' style='margin-right: 15px; text-decoration: none; color: #667eea;'>📊 Admin Dashboard</a>");
         out.println("            <a href='/skillsync/student_registration.html' style='text-decoration: none; color: #667eea;'>📝 Register Student</a>");
         out.println("        </div>");

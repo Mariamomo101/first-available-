@@ -22,6 +22,9 @@ public class DatabaseMock {
     private static final List<Student> students = Collections.synchronizedList(new ArrayList<>());
     private static final List<Organizer> organizers = Collections.synchronizedList(new ArrayList<>());
     
+    // Shortlisted students for organizer invitations
+    private static final List<Student> shortlistedStudents = Collections.synchronizedList(new ArrayList<>());
+    
     // Auto-increment counters for IDs (simulating database auto-increment)
     private static final AtomicInteger studentIdCounter = new AtomicInteger(1);
     private static final AtomicInteger organizerIdCounter = new AtomicInteger(1);
@@ -305,5 +308,130 @@ public class DatabaseMock {
      */
     private static boolean isOrganizerEmailExists(String email) {
         return findOrganizerByEmail(email) != null;
+    }
+    
+    // ============ SHORTLISTING METHODS ============
+    
+    /**
+     * Adds a student to the shortlist for organizer invitations
+     * 
+     * @param student The student to shortlist
+     * @return true if successfully added, false if already shortlisted
+     * @throws IllegalArgumentException if student is null
+     */
+    public static synchronized boolean addToShortlist(Student student) {
+        if (student == null) {
+            throw new IllegalArgumentException("Student cannot be null");
+        }
+        
+        // Check if student is already shortlisted
+        if (isStudentShortlisted(student.getEmail())) {
+            return false; // Already shortlisted
+        }
+        
+        shortlistedStudents.add(student);
+        System.out.println("✅ STUDENT SHORTLISTED:");
+        System.out.println("   Name: " + student.getName());
+        System.out.println("   Email: " + student.getEmail());
+        System.out.println("   Total Shortlisted: " + shortlistedStudents.size());
+        
+        return true;
+    }
+    
+    /**
+     * Adds a student to shortlist by email (finds student first)
+     * 
+     * @param email The email of the student to shortlist
+     * @return true if successfully added, false if student not found or already shortlisted
+     */
+    public static synchronized boolean addToShortlistByEmail(String email) {
+        if (email == null || email.trim().isEmpty()) {
+            throw new IllegalArgumentException("Email cannot be null or empty");
+        }
+        
+        Student student = findStudentByEmail(email.trim());
+        if (student == null) {
+            return false; // Student not found
+        }
+        
+        return addToShortlist(student);
+    }
+    
+    /**
+     * Retrieves all shortlisted students
+     * 
+     * @return A defensive copy of the shortlisted students list
+     */
+    public static List<Student> getShortlistedStudents() {
+        synchronized (shortlistedStudents) {
+            return new ArrayList<>(shortlistedStudents);
+        }
+    }
+    
+    /**
+     * Checks if a student is already shortlisted
+     * 
+     * @param email The email of the student to check
+     * @return true if student is shortlisted, false otherwise
+     */
+    public static boolean isStudentShortlisted(String email) {
+        if (email == null) {
+            return false;
+        }
+        
+        synchronized (shortlistedStudents) {
+            return shortlistedStudents.stream()
+                    .anyMatch(student -> student.getEmail().equalsIgnoreCase(email.trim()));
+        }
+    }
+    
+    /**
+     * Removes a student from the shortlist
+     * 
+     * @param email The email of the student to remove
+     * @return true if student was removed, false if not found
+     */
+    public static synchronized boolean removeFromShortlist(String email) {
+        if (email == null) {
+            return false;
+        }
+        
+        synchronized (shortlistedStudents) {
+            boolean removed = shortlistedStudents.removeIf(student -> 
+                    student.getEmail().equalsIgnoreCase(email.trim()));
+            
+            if (removed) {
+                System.out.println("🗑️ STUDENT REMOVED FROM SHORTLIST:");
+                System.out.println("   Email: " + email);
+                System.out.println("   Remaining Shortlisted: " + shortlistedStudents.size());
+            }
+            
+            return removed;
+        }
+    }
+    
+    /**
+     * Gets the count of shortlisted students
+     * 
+     * @return Number of shortlisted students
+     */
+    public static int getShortlistedStudentCount() {
+        return shortlistedStudents.size();
+    }
+    
+    /**
+     * Clears all shortlisted students (for testing purposes)
+     */
+    public static synchronized void clearShortlist() {
+        shortlistedStudents.clear();
+        System.out.println("🗑️ SHORTLIST CLEARED: All shortlisted students removed");
+    }
+    
+    /**
+     * Enhanced clearAll method to include shortlist
+     */
+    public static synchronized void clearAllData() {
+        clearAll();
+        clearShortlist();
     }
 }

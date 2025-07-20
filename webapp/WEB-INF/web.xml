@@ -55,6 +55,16 @@
         <servlet-name>StudentFilterServlet</servlet-name>
         <servlet-class>servlets.StudentFilterServlet</servlet-class>
     </servlet>
+    
+    <servlet>
+        <servlet-name>InviteStudentServlet</servlet-name>
+        <servlet-class>servlets.InviteStudentServlet</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>ShortlistedStudentsServlet</servlet-name>
+        <servlet-class>servlets.ShortlistedStudentsServlet</servlet-class>
+    </servlet>
 
     <!-- Servlet Mappings -->
     <servlet-mapping>
@@ -95,6 +105,16 @@
     <servlet-mapping>
         <servlet-name>StudentFilterServlet</servlet-name>
         <url-pattern>/filter-students</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>InviteStudentServlet</servlet-name>
+        <url-pattern>/invite-student</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>ShortlistedStudentsServlet</servlet-name>
+        <url-pattern>/shortlisted-students</url-pattern>
     </servlet-mapping>
 
     <!-- Session Configuration -->
