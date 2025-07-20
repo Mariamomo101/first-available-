@@ -50,6 +50,11 @@
         <servlet-name>AdminDashboardServlet</servlet-name>
         <servlet-class>servlets.AdminDashboardServlet</servlet-class>
     </servlet>
+    
+    <servlet>
+        <servlet-name>StudentFilterServlet</servlet-name>
+        <servlet-class>servlets.StudentFilterServlet</servlet-class>
+    </servlet>
 
     <!-- Servlet Mappings -->
     <servlet-mapping>
@@ -85,6 +90,11 @@
     <servlet-mapping>
         <servlet-name>AdminDashboardServlet</servlet-name>
         <url-pattern>/admin</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>StudentFilterServlet</servlet-name>
+        <url-pattern>/filter-students</url-pattern>
     </servlet-mapping>
 
     <!-- Session Configuration -->

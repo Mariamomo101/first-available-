@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filter Students - SkillSync</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+        
+        .intro {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            margin-bottom: 30px;
+            border-radius: 5px;
+        }
+        
+        .filter-form {
+            display: grid;
+            gap: 20px;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        label {
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #555;
+            font-size: 1.1em;
+        }
+        
+        input, select {
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        button {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-weight: bold;
+        }
+        
+        .btn-primary {
+            background: #667eea;
+            color: white;
+            flex: 1;
+        }
+        
+        .btn-primary:hover {
+            background: #5a6fd8;
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+            flex: 1;
+        }
+        
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+        
+        .filter-tips {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 5px;
+        }
+        
+        .filter-tips h3 {
+            margin-top: 0;
+            color: #856404;
+        }
+        
+        .filter-tips ul {
+            margin-bottom: 0;
+            color: #856404;
+        }
+        
+        .navigation {
+            margin-top: 30px;
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+        }
+        
+        .navigation a {
+            margin: 0 15px;
+            text-decoration: none;
+            color: #667eea;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+        
+        .navigation a:hover {
+            color: #5a6fd8;
+            text-decoration: underline;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+        
+        @media (min-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        .skill-examples {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 5px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Filter Students</h1>
+        
+        <div class="intro">
+            <strong>📊 Student Search:</strong> Use the filters below to find students based on their skills, department, and semester. You can use any combination of filters or leave them empty to see all students.
+        </div>
+        
+        <form class="filter-form" method="GET" action="filter-students">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="skill">🛠️ Skill (contains):</label>
+                    <input 
+                        type="text" 
+                        id="skill" 
+                        name="skill" 
+                        placeholder="Enter skill name..." 
+                        title="Filter by skill name (partial match, case-insensitive)"
+                    >
+                    <div class="skill-examples">Examples: Java, Python, React, Machine Learning</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="semester">📚 Semester:</label>
+                    <select id="semester" name="semester" title="Filter by student semester">
+                        <option value="">-- All Semesters --</option>
+                        <option value="1">1st Semester</option>
+                        <option value="2">2nd Semester</option>
+                        <option value="3">3rd Semester</option>
+                        <option value="4">4th Semester</option>
+                        <option value="5">5th Semester</option>
+                        <option value="6">6th Semester</option>
+                        <option value="7">7th Semester</option>
+                        <option value="8">8th Semester</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="department">🏛️ Department:</label>
+                <select id="department" name="department" title="Filter by student department">
+                    <option value="">-- All Departments --</option>
+                    <option value="Computer Science">Computer Science</option>
+                    <option value="Engineering">Engineering</option>
+                    <option value="Business">Business</option>
+                    <option value="Mathematics">Mathematics</option>
+                    <option value="Physics">Physics</option>
+                    <option value="Chemistry">Chemistry</option>
+                    <option value="Biology">Biology</option>
+                    <option value="Psychology">Psychology</option>
+                    <option value="Economics">Economics</option>
+                    <option value="Literature">Literature</option>
+                    <option value="Art">Art</option>
+                    <option value="Music">Music</option>
+                </select>
+            </div>
+            
+            <div class="button-group">
+                <button type="submit" class="btn-primary">🔍 Search Students</button>
+                <button type="reset" class="btn-secondary">🔄 Clear All Filters</button>
+            </div>
+        </form>
+        
+        <div class="filter-tips">
+            <h3>💡 Search Tips</h3>
+            <ul>
+                <li><strong>Skill Search:</strong> Enter any part of a skill name. For example, "Java" will find students with "Java", "JavaScript", etc.</li>
+                <li><strong>Multiple Filters:</strong> Combine filters to narrow down results. For example, search for "Python" skills in "Computer Science" department.</li>
+                <li><strong>Case Insensitive:</strong> Search is not case-sensitive, so "java" and "Java" will give the same results.</li>
+                <li><strong>Partial Matches:</strong> Skill and department searches support partial matching for more flexible results.</li>
+            </ul>
+        </div>
+        
+        <div class="navigation">
+            <a href="student_registration.html">📝 Register New Student</a>
+            <a href="organizer_request.html">🏢 Submit Organizer Request</a>
+            <a href="admin-dashboard">📊 View Admin Dashboard</a>
+        </div>
+    </div>
+
+    <script>
+        // Add some basic form validation and UX improvements
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.querySelector('.filter-form');
+            const skillInput = document.getElementById('skill');
+            const departmentSelect = document.getElementById('department');
+            const semesterSelect = document.getElementById('semester');
+            const submitButton = document.querySelector('.btn-primary');
+            
+            // Add form validation
+            form.addEventListener('submit', function(e) {
+                const skill = skillInput.value.trim();
+                const department = departmentSelect.value;
+                const semester = semesterSelect.value;
+                
+                // Check if at least one filter is provided
+                if (!skill && !department && !semester) {
+                    const proceed = confirm('No filters applied. This will show all students. Continue?');
+                    if (!proceed) {
+                        e.preventDefault();
+                        return;
+                    }
+                }
+                
+                // Show loading state
+                submitButton.textContent = '🔍 Searching...';
+                submitButton.disabled = true;
+            });
+            
+            // Add real-time feedback
+            function updateSearchButton() {
+                const hasFilters = skillInput.value.trim() || departmentSelect.value || semesterSelect.value;
+                if (hasFilters) {
+                    submitButton.textContent = '🔍 Search Students';
+                } else {
+                    submitButton.textContent = '🔍 Show All Students';
+                }
+            }
+            
+            skillInput.addEventListener('input', updateSearchButton);
+            departmentSelect.addEventListener('change', updateSearchButton);
+            semesterSelect.addEventListener('change', updateSearchButton);
+            
+            // Add keyboard shortcuts
+            document.addEventListener('keydown', function(e) {
+                // Ctrl+Enter to submit form
+                if (e.ctrlKey && e.key === 'Enter') {
+                    form.submit();
+                }
+                // Escape to clear form
+                if (e.key === 'Escape') {
+                    form.reset();
+                    updateSearchButton();
+                }
+            });
+            
+            // Initialize button text
+            updateSearchButton();
+        });
+    </script>
+</body>
+</html>
