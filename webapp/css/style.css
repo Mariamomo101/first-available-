@@ -92,6 +92,15 @@ main {
     background-color: #7f8c8d;
 }
 
+.btn-success {
+    background-color: #27ae60;
+    color: white;
+}
+
+.btn-success:hover {
+    background-color: #229954;
+}
+
 /* Hero Section */
 .hero {
     text-align: center;

@@ -40,6 +40,10 @@ public class StudentRegistrationServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         
         try {
+            // Check which action was requested
+            String action = request.getParameter("action");
+            if (action == null) action = "register"; // Default to register for backward compatibility
+            
             // Extract form parameters
             String name = request.getParameter("name");
             String email = request.getParameter("email");
@@ -90,29 +94,15 @@ public class StudentRegistrationServlet extends HttpServlet {
                 interestAreasList = Arrays.asList(interestAreasArray);
             }
             
-            // Create Student object using constructor
-            Student student = new Student(name.trim(), email.trim(), department.trim(), semester,
-                                        skillsList, cvLink != null ? cvLink.trim() : null, 
-                                        interestAreasList);
-            
-            // Save student to mock database
-            try {
-                int studentId = DatabaseMock.addStudent(student);
-                System.out.println("✅ Student successfully registered with ID: " + studentId);
-                
-                // Log registration for debugging/monitoring
-                logStudentRegistration(student);
-                
-                // Display current database stats
-                System.out.println(DatabaseMock.getDatabaseStats());
-                
-                // Send success response with student ID
-                sendSuccessResponse(out, student, studentId);
-                
-            } catch (IllegalArgumentException e) {
-                // Handle duplicate email or other validation errors
-                sendErrorResponse(out, "Registration failed: " + e.getMessage());
-                return;
+            // Handle registration or update based on action
+            if ("update".equals(action)) {
+                // Update existing student profile
+                handleProfileUpdate(out, name.trim(), email.trim(), department.trim(), semester,
+                                  skillsList, cvLink != null ? cvLink.trim() : null, interestAreasList);
+            } else {
+                // Register new student
+                handleStudentRegistration(out, name.trim(), email.trim(), department.trim(), semester,
+                                        skillsList, cvLink != null ? cvLink.trim() : null, interestAreasList);
             }
             
         } catch (Exception e) {
@@ -126,13 +116,86 @@ public class StudentRegistrationServlet extends HttpServlet {
     }
     
     /**
-     * Sends a success response to the user with registration confirmation
+     * Handles new student registration
+     */
+    private void handleStudentRegistration(PrintWriter out, String name, String email, String department, 
+                                         int semester, List<String> skills, String cvLink, List<String> interestAreas) {
+        try {
+            // Create Student object using constructor
+            Student student = new Student(name, email, department, semester, skills, cvLink, interestAreas);
+            
+            // Save student to mock database
+            int studentId = DatabaseMock.addStudent(student);
+            System.out.println("✅ Student successfully registered with ID: " + studentId);
+            
+            // Log registration for debugging/monitoring
+            logStudentRegistration(student);
+            
+            // Display current database stats
+            System.out.println(DatabaseMock.getDatabaseStats());
+            
+            // Send success response with student ID
+            sendSuccessResponse(out, student, studentId, "registration");
+            
+        } catch (IllegalArgumentException e) {
+            // Handle duplicate email or other validation errors
+            sendErrorResponse(out, "Registration failed: " + e.getMessage());
+        }
+    }
+    
+    /**
+     * Handles updating existing student profile
+     */
+    private void handleProfileUpdate(PrintWriter out, String name, String email, String department, 
+                                   int semester, List<String> skills, String cvLink, List<String> interestAreas) {
+        try {
+            // Check if student exists
+            Student existingStudent = DatabaseMock.findStudentByEmail(email);
+            
+            if (existingStudent != null) {
+                // Update existing student profile
+                existingStudent.setName(name);
+                existingStudent.setDepartment(department);
+                existingStudent.updateProfile(semester, skills, cvLink, interestAreas);
+                
+                System.out.println("✅ Student profile updated successfully: " + email);
+                
+                // Log update for debugging/monitoring
+                logStudentUpdate(existingStudent);
+                
+                // Send success response
+                sendSuccessResponse(out, existingStudent, existingStudent.getEmail().hashCode(), "update");
+                
+            } else {
+                // Student doesn't exist, suggest registration instead
+                sendErrorResponse(out, "No student found with email " + email + ". Please register as a new student first.");
+            }
+            
+        } catch (Exception e) {
+            sendErrorResponse(out, "Profile update failed: " + e.getMessage());
+        }
+    }
+    
+    /**
+     * Sends a success response to the user with registration confirmation (backwards compatibility)
      * 
      * @param out PrintWriter for response output
      * @param student The registered student object
      * @param studentId The assigned student ID from database
      */
     private void sendSuccessResponse(PrintWriter out, Student student, int studentId) {
+        sendSuccessResponse(out, student, studentId, "registration");
+    }
+    
+    /**
+     * Sends a success response to the user with registration confirmation
+     * 
+     * @param out PrintWriter for response output
+     * @param student The registered student object
+     * @param studentId The assigned student ID from database
+     * @param actionType The type of action performed (registration or update)
+     */
+    private void sendSuccessResponse(PrintWriter out, Student student, int studentId, String actionType) {
         out.println("<!DOCTYPE html>");
         out.println("<html lang='en'>");
         out.println("<head>");
@@ -162,11 +225,17 @@ public class StudentRegistrationServlet extends HttpServlet {
         out.println("    <main>");
         out.println("        <div class='form-container'>");
         out.println("            <section class='registration-form'>");
-        out.println("                <h2>🎉 Registration Successful!</h2>");
-        out.println("                <p class='form-description'>Welcome to SkillSync, " + student.getName() + "!</p>");
+                        String title = "update".equals(actionType) ? "🎉 Profile Updated Successfully!" : "🎉 Registration Successful!";
+                String subtitle = "update".equals(actionType) ? 
+                    "Your profile has been updated, " + student.getName() + "!" : 
+                    "Welcome to SkillSync, " + student.getName() + "!";
+                String detailsHeader = "update".equals(actionType) ? "Updated Profile Details:" : "Registration Details:";
+                
+                out.println("                <h2>" + title + "</h2>");
+                out.println("                <p class='form-description'>" + subtitle + "</p>");
         
         out.println("                <div style='background-color: #d4edda; border: 1px solid #c3e6cb; border-radius: 5px; padding: 2rem; margin: 2rem 0;'>");
-        out.println("                    <h3 style='color: #155724; margin-bottom: 1rem;'>Registration Details:</h3>");
+        out.println("                    <h3 style='color: #155724; margin-bottom: 1rem;'>" + detailsHeader + "</h3>");
         out.println("                    <p><strong>Student ID:</strong> #" + studentId + "</p>");
         out.println("                    <p><strong>Name:</strong> " + student.getName() + "</p>");
         out.println("                    <p><strong>Email:</strong> " + student.getEmail() + "</p>");
@@ -183,6 +252,10 @@ public class StudentRegistrationServlet extends HttpServlet {
         
         if (student.getCvLink() != null && !student.getCvLink().isEmpty()) {
             out.println("                    <p><strong>CV Link:</strong> <a href='" + student.getCvLink() + "' target='_blank'>" + student.getCvLink() + "</a></p>");
+        }
+        
+        if (student.getLastUpdated() != null) {
+            out.println("                    <p><strong>Last Updated:</strong> " + student.getLastUpdated().toString() + "</p>");
         }
         out.println("                </div>");
         
@@ -274,5 +347,17 @@ public class StudentRegistrationServlet extends HttpServlet {
         System.out.println("Timestamp: " + new java.util.Date());
         student.displayProfile();
         System.out.println("================================");
+    }
+    
+    /**
+     * Logs student profile update for monitoring and debugging
+     * 
+     * @param student The updated student
+     */
+    private void logStudentUpdate(Student student) {
+        System.out.println("=== STUDENT PROFILE UPDATE ===");
+        System.out.println("Timestamp: " + new java.util.Date());
+        student.displayProfile();
+        System.out.println("==============================");
     }
 }

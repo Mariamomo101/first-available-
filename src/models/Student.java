@@ -2,6 +2,7 @@ package models;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.time.LocalDateTime;
 
 /**
  * Student class representing a student user in the SkillSync application
@@ -16,6 +17,7 @@ public class Student extends User {
     private List<String> skills;
     private String cvLink;
     private List<String> interestAreas;
+    private LocalDateTime lastUpdated;
     
     /**
      * Default constructor
@@ -25,6 +27,7 @@ public class Student extends User {
         super();
         this.skills = new ArrayList<>();
         this.interestAreas = new ArrayList<>();
+        this.lastUpdated = LocalDateTime.now();
     }
     
     /**
@@ -39,6 +42,7 @@ public class Student extends User {
         super(name, email, department, semester);
         this.skills = new ArrayList<>();
         this.interestAreas = new ArrayList<>();
+        this.lastUpdated = LocalDateTime.now();
     }
     
     /**
@@ -58,6 +62,7 @@ public class Student extends User {
         this.skills = skills != null ? new ArrayList<>(skills) : new ArrayList<>();
         this.cvLink = cvLink;
         this.interestAreas = interestAreas != null ? new ArrayList<>(interestAreas) : new ArrayList<>();
+        this.lastUpdated = LocalDateTime.now();
     }
     
     // Getter and Setter methods for student-specific fields
@@ -192,6 +197,8 @@ public class Student extends User {
             }
         }
         
+        System.out.println("Last Updated: " + (lastUpdated != null ? lastUpdated.toString() : "Unknown"));
+        
         System.out.println("========================");
     }
     
@@ -216,6 +223,47 @@ public class Student extends User {
     }
     
     /**
+     * Gets the last updated timestamp
+     * 
+     * @return The LocalDateTime when the student profile was last updated
+     */
+    public LocalDateTime getLastUpdated() {
+        return lastUpdated;
+    }
+    
+    /**
+     * Sets the last updated timestamp
+     * 
+     * @param lastUpdated The LocalDateTime to set
+     */
+    public void setLastUpdated(LocalDateTime lastUpdated) {
+        this.lastUpdated = lastUpdated;
+    }
+    
+    /**
+     * Updates the student profile and sets the lastUpdated timestamp to now
+     * 
+     * @param semester The new semester
+     * @param skills The updated skills list
+     * @param cvLink The updated CV link
+     * @param interestAreas The updated interest areas
+     */
+    public void updateProfile(int semester, List<String> skills, String cvLink, List<String> interestAreas) {
+        setSemester(semester);
+        setSkills(skills);
+        setCvLink(cvLink);
+        setInterestAreas(interestAreas);
+        this.lastUpdated = LocalDateTime.now();
+    }
+    
+    /**
+     * Updates the lastUpdated timestamp to current time
+     */
+    public void touchLastUpdated() {
+        this.lastUpdated = LocalDateTime.now();
+    }
+    
+    /**
      * Override toString method for better object representation
      * 
      * @return String representation of the Student object
@@ -230,6 +278,7 @@ public class Student extends User {
                 ", skills=" + skills +
                 ", cvLink='" + cvLink + '\'' +
                 ", interestAreas=" + interestAreas +
+                ", lastUpdated=" + lastUpdated +
                 '}';
     }
 }
