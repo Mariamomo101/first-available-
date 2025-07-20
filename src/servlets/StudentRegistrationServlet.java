@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import models.Student;
+import utils.DatabaseMock;
 
 /**
  * Servlet for handling student registration form submissions in SkillSync application
@@ -94,14 +95,25 @@ public class StudentRegistrationServlet extends HttpServlet {
                                         skillsList, cvLink != null ? cvLink.trim() : null, 
                                         interestAreasList);
             
-            // Log registration for debugging/monitoring
-            logStudentRegistration(student);
-            
-            // TODO: Save student to database
-            // Example: studentDAO.save(student);
-            
-            // Send success response
-            sendSuccessResponse(out, student);
+            // Save student to mock database
+            try {
+                int studentId = DatabaseMock.addStudent(student);
+                System.out.println("✅ Student successfully registered with ID: " + studentId);
+                
+                // Log registration for debugging/monitoring
+                logStudentRegistration(student);
+                
+                // Display current database stats
+                System.out.println(DatabaseMock.getDatabaseStats());
+                
+                // Send success response with student ID
+                sendSuccessResponse(out, student, studentId);
+                
+            } catch (IllegalArgumentException e) {
+                // Handle duplicate email or other validation errors
+                sendErrorResponse(out, "Registration failed: " + e.getMessage());
+                return;
+            }
             
         } catch (Exception e) {
             // Handle any unexpected errors
@@ -118,8 +130,9 @@ public class StudentRegistrationServlet extends HttpServlet {
      * 
      * @param out PrintWriter for response output
      * @param student The registered student object
+     * @param studentId The assigned student ID from database
      */
-    private void sendSuccessResponse(PrintWriter out, Student student) {
+    private void sendSuccessResponse(PrintWriter out, Student student, int studentId) {
         out.println("<!DOCTYPE html>");
         out.println("<html lang='en'>");
         out.println("<head>");
@@ -154,6 +167,7 @@ public class StudentRegistrationServlet extends HttpServlet {
         
         out.println("                <div style='background-color: #d4edda; border: 1px solid #c3e6cb; border-radius: 5px; padding: 2rem; margin: 2rem 0;'>");
         out.println("                    <h3 style='color: #155724; margin-bottom: 1rem;'>Registration Details:</h3>");
+        out.println("                    <p><strong>Student ID:</strong> #" + studentId + "</p>");
         out.println("                    <p><strong>Name:</strong> " + student.getName() + "</p>");
         out.println("                    <p><strong>Email:</strong> " + student.getEmail() + "</p>");
         out.println("                    <p><strong>Department:</strong> " + student.getDepartment() + "</p>");

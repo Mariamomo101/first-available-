@@ -45,6 +45,11 @@
         <servlet-name>OrganizerRequestServlet</servlet-name>
         <servlet-class>servlets.OrganizerRequestServlet</servlet-class>
     </servlet>
+    
+    <servlet>
+        <servlet-name>AdminDashboardServlet</servlet-name>
+        <servlet-class>servlets.AdminDashboardServlet</servlet-class>
+    </servlet>
 
     <!-- Servlet Mappings -->
     <servlet-mapping>
@@ -75,6 +80,11 @@
     <servlet-mapping>
         <servlet-name>OrganizerRequestServlet</servlet-name>
         <url-pattern>/OrganizerRequestServlet</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>AdminDashboardServlet</servlet-name>
+        <url-pattern>/admin</url-pattern>
     </servlet-mapping>
 
     <!-- Session Configuration -->

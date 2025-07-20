@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import models.Organizer;
+import utils.DatabaseMock;
 
 /**
  * Servlet for handling organizer request form submissions in SkillSync application
@@ -88,20 +89,31 @@ public class OrganizerRequestServlet extends HttpServlet {
             String organizerEventDescription = eventDescription != null ? eventDescription.trim() : "";
             String organizerExperience = experience != null ? experience.trim() : "";
             
-            // Log organizer request for debugging/monitoring
-            logOrganizerRequest(organizer, organizerPreferredSemester, organizerType, 
-                              eventTypesList, organizerEventDescription, organizerExperience);
-            
-            // TODO: Save organizer to database
-            // Example: organizerDAO.save(organizer);
-            // Also save additional fields like organizationType, eventTypes, etc.
-            
-            // TODO: Send notification email to admin about new organizer request
-            // TODO: Send confirmation email to organizer
-            
-            // Send success response
-            sendSuccessResponse(out, organizer, organizerPreferredSemester, organizerType, 
-                              eventTypesList, organizerEventDescription, organizerExperience);
+            // Save organizer to mock database
+            try {
+                int organizerId = DatabaseMock.addOrganizer(organizer);
+                System.out.println("✅ Organizer successfully registered with ID: " + organizerId);
+                
+                // Log organizer request for debugging/monitoring
+                logOrganizerRequest(organizer, organizerPreferredSemester, organizerType, 
+                                  eventTypesList, organizerEventDescription, organizerExperience);
+                
+                // Display current database stats
+                System.out.println(DatabaseMock.getDatabaseStats());
+                
+                // TODO: Save additional fields like organizationType, eventTypes, etc. to separate tables
+                // TODO: Send notification email to admin about new organizer request
+                // TODO: Send confirmation email to organizer
+                
+                // Send success response with organizer ID
+                sendSuccessResponse(out, organizer, organizerId, organizerPreferredSemester, organizerType, 
+                                  eventTypesList, organizerEventDescription, organizerExperience);
+                
+            } catch (IllegalArgumentException e) {
+                // Handle duplicate email or other validation errors
+                sendErrorResponse(out, "Request failed: " + e.getMessage());
+                return;
+            }
             
         } catch (Exception e) {
             // Handle any unexpected errors
@@ -118,13 +130,14 @@ public class OrganizerRequestServlet extends HttpServlet {
      * 
      * @param out PrintWriter for response output
      * @param organizer The organizer object
+     * @param organizerId The assigned organizer ID from database
      * @param preferredSemester Preferred target semester
      * @param organizationType Type of organization
      * @param eventTypes List of event types
      * @param eventDescription Event description
      * @param experience Organizer experience
      */
-    private void sendSuccessResponse(PrintWriter out, Organizer organizer, String preferredSemester,
+    private void sendSuccessResponse(PrintWriter out, Organizer organizer, int organizerId, String preferredSemester,
                                    String organizationType, List<String> eventTypes, 
                                    String eventDescription, String experience) {
         out.println("<!DOCTYPE html>");
@@ -161,6 +174,7 @@ public class OrganizerRequestServlet extends HttpServlet {
         
         out.println("                <div style='background-color: #d1ecf1; border: 1px solid #bee5eb; border-radius: 5px; padding: 2rem; margin: 2rem 0;'>");
         out.println("                    <h3 style='color: #0c5460; margin-bottom: 1rem;'>Request Details:</h3>");
+        out.println("                    <p><strong>Organizer ID:</strong> #" + organizerId + "</p>");
         out.println("                    <p><strong>Name:</strong> " + organizer.getName() + "</p>");
         out.println("                    <p><strong>Email:</strong> " + organizer.getEmail() + "</p>");
         out.println("                    <p><strong>Department:</strong> " + organizer.getDepartment() + "</p>");
